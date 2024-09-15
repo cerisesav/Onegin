@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "reading.h"
 
@@ -12,21 +13,16 @@ char* array_from_file(const int text_bytes)
 
 char** pointer_array(char* text_a, const size_t count, int line_count)
 {
-    char** lines = (char**)calloc(line_count, sizeof(char*));
-    lines[0] = text_a;
+    char** lines = (char**)calloc(line_count + 1, sizeof(char*));
 
-    size_t j = 1;
-    for (size_t i = 0; i < count; i++)
+    char* token = strtok(text_a, "\n");
+    size_t index = 0;
+    while (token != NULL)
     {
-        if (text_a[i] == '\n')
-        {
-            text_a[i] = '\0';
-            if (i + 1 < count)
-            {
-                lines[j++] = &text_a[i + 1];
-            }
-        }
+        lines[index++] = token;
+        token = strtok(NULL, "\n");
     }
+
     return lines;
 }
 
