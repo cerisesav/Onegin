@@ -1,8 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
-#include <stdbool.h>
-#include <string.h>
 
 #include "reading.h"
 #include "sort_compare.h"
@@ -11,7 +8,7 @@ int main()
 {
     FILE *text = fopen("text.txt", "rb");
 
-    const int text_bytes = size_text(text);
+    long text_bytes = size_text(text);
 
     char *text_a = array_from_file(text_bytes);
 

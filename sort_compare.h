@@ -3,6 +3,5 @@
 
 int compare_string(const char* first_string, const char* next_string);
 void sorter(char** mass, int line);
-// int isalnum_nospace(const char string);
 
 #endif

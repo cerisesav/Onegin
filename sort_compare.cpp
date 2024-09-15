@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include <stdbool.h>
-#include <string.h>
+
 #include "sort_compare.h"
 
 static int isalnum_nospace(const char string)
