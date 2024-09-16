@@ -5,13 +5,13 @@
 
 #include "reading.h"
 
-char* array_from_file(const int text_bytes)
+char* create_array(const int text_bytes)
 {
     char* text_a = (char*)calloc(text_bytes, sizeof(char));
     return text_a;
 }
 
-char** pointer_array(char* text_a, const size_t count, int line_count)
+char** make_pointers_array(char* text_a, const size_t count, int line_count)
 {
     char** lines = (char**)calloc(line_count + 1, sizeof(char*));
 
@@ -26,7 +26,7 @@ char** pointer_array(char* text_a, const size_t count, int line_count)
     return lines;
 }
 
-size_t line_count_f(const size_t count, char* text_a)
+size_t count_lines(const size_t count, char* text_a)
 {
     size_t line_count = 0;
 

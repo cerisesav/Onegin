@@ -10,13 +10,15 @@ int main()
 
     long text_bytes = size_text(text);
 
-    char *text_a = array_from_file(text_bytes);
+    char *text_a = create_array(text_bytes);
 
     const size_t count = fread(text_a, sizeof(text_a[0]), text_bytes, text);
 
-    size_t line_count = line_count_f(count, text_a);
-    char** lines = pointer_array(text_a, count, line_count);
+    size_t line_count = count_lines(count, text_a);
+    char** lines = make_pointers_array(text_a, count, line_count);
     sorter(lines, line_count);
+
+    // quickSort(lines, 0, line_count - 1);
 
     for (size_t i = 0; i < line_count; i++)
     {
