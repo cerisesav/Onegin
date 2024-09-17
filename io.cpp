@@ -3,11 +3,12 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "reading.h"
+#include "io.h"
 
 char* create_array(const int text_bytes)
 {
     char* text_a = (char*)calloc(text_bytes, sizeof(char));
+    free(text_a);
     return text_a;
 }
 
@@ -48,3 +49,10 @@ long size_text(FILE *text)
     return lSize;
 }
 
+void output(size_t line_count, char** lines)
+{
+    for (size_t i = 0; i < line_count; i++)
+        {
+            printf("%s\n", lines[i]);
+        }
+}

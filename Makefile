@@ -4,7 +4,7 @@ CXXFLAGS = -Wall -g
 
 EXEC = main
 
-OBJS = main.o reading.o sort_compare.o
+OBJS = main.o io.o sort_compare.o
 
 
 all: $(EXEC)
@@ -19,7 +19,7 @@ $(EXEC): $(OBJS)
 
 # Compile reading.cpp to reading.o
 
-	$(CXX) $(CXXFLAGS) -c reading.cpp
+	$(CXX) $(CXXFLAGS) -c io.cpp
 
 # Compile sort_compare.cpp to sort_compare.o
 
