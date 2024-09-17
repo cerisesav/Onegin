@@ -46,7 +46,7 @@ void sorter(char** mass, int line)
         noSwap = true;
         for (size_t j = 0; j < i; j++)
         {
-            if (compare_string(mass[j], mass[j + 1]) > 0)
+            if (back_compare_string(mass[j], mass[j + 1]) > 0)
             {
                 swap(&mass[j], &mass[j+1], sizeof(char*));
                 noSwap = false;
@@ -55,6 +55,33 @@ void sorter(char** mass, int line)
         if (noSwap)
             break;
     }
+}
+
+int back_compare_string(const char* first_string, const char* next_string)
+{
+    size_t i = sizeof(*first_string) / sizeof(first_string[0]), j = sizeof(*next_string) / sizeof(next_string[0]);
+
+    while (first_string[i] != '\0' && next_string[j] != '\0')
+    {
+
+        while (first_string[i] != '\0' && !isalnum_nospace(first_string[i]))
+        {
+            i--;
+        }
+        while (next_string[j] != '\0' && !isalnum_nospace(next_string[j]))
+        {
+            j--;
+        }
+
+        if (tolower(first_string[i]) != tolower(next_string[j]))
+        {
+            return ((int)tolower(first_string[i]) - (int)tolower(next_string[j]));
+        }
+
+        i--;
+        j--;
+    }
+    return ((int)first_string[i] - (int)next_string[j]);
 }
 
 void swap(void *a, void *b, size_t width)
