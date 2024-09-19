@@ -10,43 +10,47 @@ static int isalnum_nospace(const char string)
     return isalnum(string) || string == ' ';
 }
 
-int compare_string(const char* first_string, const char* next_string)
+int compare_string(const char* first_char, const char* second_char)
 {
     size_t i = 0, j = 0;
 
-    while (first_string[i] != '\0' && next_string[j] != '\0')
+    while (first_char[i] != '\0' && second_char[j] != '\0')
     {
+        skip_chars_straight(i, j, first_char, second_char);
 
-        while (first_string[i] != '\0' && !isalnum_nospace(first_string[i]))
+        if (tolower(first_char[i]) != tolower(second_char[j]))
         {
-            i++;
-        }
-        while (next_string[j] != '\0' && !isalnum_nospace(next_string[j]))
-        {
-            j++;
-        }
-
-        if (tolower(first_string[i]) != tolower(next_string[j]))
-        {
-            return ((int)tolower(first_string[i]) - (int)tolower(next_string[j]));
+            return ((int)tolower(first_char[i]) - (int)tolower(second_char[j]));
         }
 
         i++;
         j++;
     }
-    return ((int)first_string[i] - (int)next_string[j]);
+    return 0;
 }
 
-void sorter(char** mass, int line)
+void skip_chars_straight(size_t i, size_t j, const char* first_char, const char* second_char)
+{
+    while (first_char[i] != '\0' && !isalnum_nospace(first_char[i]))
+        {
+            i++;
+        }
+    while (second_char[j] != '\0' && !isalnum_nospace(second_char[j]))
+        {
+            j++;
+        }
+}
+
+void sort_strings(char** mass, int line_count) // передавать функцию сортер по указателю
 {
     bool noSwap = true;
 
-    for (size_t i = line - 1; i > 0; i--)
+    for (size_t i = line_count - 1; i > 0; i--)
     {
         noSwap = true;
         for (size_t j = 0; j < i; j++)
         {
-            if (back_compare_string(mass[j], mass[j + 1]) > 0)
+            if (compare_string(mass[j], mass[j + 1]) > 0)
             {
                 swap(&mass[j], &mass[j+1], sizeof(char*));
                 noSwap = false;
@@ -57,39 +61,48 @@ void sorter(char** mass, int line)
     }
 }
 
-int back_compare_string(const char* first_string, const char* next_string)
+int back_compare_string(const char* first_char, const char* second_char)
 {
-    size_t i = sizeof(*first_string) / sizeof(first_string[0]), j = sizeof(*next_string) / sizeof(next_string[0]);
+    size_t i = sizeof(*first_char) / sizeof(first_char[0]), j = sizeof(*second_char) / sizeof(second_char[0]);
 
-    while (first_string[i] != '\0' && next_string[j] != '\0')
+    while (first_char[i] != '\0' && second_char[j] != '\0')
     {
 
-        while (first_string[i] != '\0' && !isalnum_nospace(first_string[i]))
-        {
-            i--;
-        }
-        while (next_string[j] != '\0' && !isalnum_nospace(next_string[j]))
-        {
-            j--;
-        }
+        skip_chars_back(i, j, first_char, second_char);
 
-        if (tolower(first_string[i]) != tolower(next_string[j]))
+        if (tolower(first_char[i]) != tolower(second_char[j]))
         {
-            return ((int)tolower(first_string[i]) - (int)tolower(next_string[j]));
+            return ((int)tolower(first_char[i]) - (int)tolower(second_char[j]));
         }
 
         i--;
         j--;
     }
-    return ((int)first_string[i] - (int)next_string[j]);
+    return 0;
 }
+
+void skip_chars_back(size_t i, size_t j, const char* first_char, const char* second_char)
+{
+    while (first_char[i] != '\0' && !isalnum_nospace(first_char[i]))
+        {
+            i--;
+        }
+    while (second_char[j] != '\0' && !isalnum_nospace(second_char[j]))
+        {
+            j--;
+        }
+}
+
+
 
 void swap(void *a, void *b, size_t width)
 {
     void *temp = malloc(width);
+
     memcpy(temp, b, width);
     memcpy(b, a, width);
     memcpy(a, temp, width);
+
     free(temp);
 }
 
