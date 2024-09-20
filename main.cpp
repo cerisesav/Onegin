@@ -10,26 +10,28 @@ int main()
 {
     READ(text, "text.txt", "rb");
 
-    struct String string_data;
+    struct String string_data = {};
+    struct String *ptr_string;
+    ptr_string = &string_data;
 
-    string_data.text_bytes = return_size_text(text);
+    ptr_string->text_bytes = return_size_text(text);
 
-    string_data.text_a = create_array(string_data.text_bytes);
+    ptr_string->text_a = create_array(ptr_string->text_bytes);
 
-    if (fread(string_data.text_a, sizeof(char), string_data.text_bytes, text) != string_data.text_bytes)
+    if (fread(ptr_string->text_a, sizeof(char), ptr_string->text_bytes, text) != ptr_string->text_bytes)
     {
         puts("fread != size of text");
     }
 
-    string_data.line_count = count_lines(string_data.text_bytes, string_data.text_a);
-    string_data.lines = make_pointers_array(string_data.text_a, string_data.line_count);
+    ptr_string->line_count = count_lines(ptr_string->text_bytes, ptr_string->text_a);
+    ptr_string->lines = make_pointers_array(ptr_string->text_a, ptr_string->line_count);
 
-    sort_strings(string_data.lines, string_data.line_count);
-    print_results(string_data.line_count, string_data.lines);
+    quick_sort(ptr_string->lines, 0, ptr_string->line_count-1);
+    print_results(ptr_string->line_count, ptr_string->lines);
 
 
-    free(string_data.text_a);
-    free(string_data.lines);
+    free(ptr_string->text_a);
+    free(ptr_string->lines);
     fclose(text);
 
     return 0;

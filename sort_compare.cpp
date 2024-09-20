@@ -93,8 +93,6 @@ void skip_chars_back(size_t i, size_t j, const char* first_char, const char* sec
         }
 }
 
-
-
 void swap(void *a, void *b, size_t width)
 {
     void *temp = malloc(width);
@@ -105,16 +103,6 @@ void swap(void *a, void *b, size_t width)
 
     free(temp);
 }
-
-
-
-
-
-
-
-
-
-// FORGET ABOUT THIS SHIT
 
 // function to find the partition position
 static int partition(char** array, int low, int high) {
@@ -146,7 +134,7 @@ static int partition(char** array, int low, int high) {
   return (i + 1);
 }
 
-void quickSort(char** array, int low, int high)
+void quick_sort(char** array, int low, int high)
 {
     if (low < high)
     {
@@ -156,10 +144,10 @@ void quickSort(char** array, int low, int high)
         int pi = partition(array, low, high);
 
         // recursive call on the left of pivot
-        quickSort(array, low, pi - 1);
+        quick_sort(array, low, pi - 1);
 
         // recursive call on the right of pivot
-        quickSort(array, pi + 1, high);
+        quick_sort(array, pi + 1, high);
     }
 }
 
