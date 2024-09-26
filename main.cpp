@@ -8,35 +8,36 @@
 
 int main()
 {
-    READ(text, "text.txt", "rb");
 
-    struct String string_data = {};
-    struct String *ptr_string;
-    ptr_string = &string_data;
+    struct Lines lines_data = {};
+    struct Lines *ptr_line;
+    ptr_line = &lines_data;
 
-    ptr_string->text_bytes = return_size_text(text);
+    struct Text text_data = {};
+    struct Text *ptr_text;
+    ptr_text = &text_data;
 
-    ptr_string->text_a = create_array(ptr_string->text_bytes);
+    ptr_text->file = fopen("text.txt", "rb");
 
-    if (fread(ptr_string->text_a, sizeof(char), ptr_string->text_bytes, text) != ptr_string->text_bytes)
+    ptr_text->text_bytes = return_size_text(ptr_text->file);
+
+    ptr_text->text_a = create_array(ptr_text->text_bytes);
+
+    if (fread(ptr_text->text_a, sizeof(char), ptr_text->text_bytes, ptr_text->file) != ptr_text->text_bytes)
     {
         puts("fread != size of text");
     }
 
-    ptr_string->line_count = count_lines(ptr_string->text_bytes, ptr_string->text_a);
-    ptr_string->lines = make_pointers_array(ptr_string->text_a, ptr_string->line_count);
+    ptr_line->line_count = count_lines(ptr_text);
+    ptr_line->lines = make_pointers_array(ptr_text->text_a, ptr_line->line_count);
 
-    quick_sort(ptr_string->lines, 0, ptr_string->line_count-1);
-    print_results(ptr_string->line_count, ptr_string->lines);
+    choose_sort_compare(straight_compare_string, quick_sort, ptr_line->lines, 0, ptr_line->line_count-1);
 
-
-    free(ptr_string->text_a);
-    free(ptr_string->lines);
-    fclose(text);
+    print_results(ptr_line);
+    close_text(ptr_text, ptr_line);
 
     return 0;
 
 }
 
 
-// quickSort(lines, 0, line_count - 1);

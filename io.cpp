@@ -28,13 +28,20 @@ char** make_pointers_array(char* text_a, size_t line_count)
     return lines;
 }
 
-size_t count_lines(const long text_bytes, char* text_a)
+void close_text(struct Text* text, struct Lines* line)
+{
+    free(text->text_a);
+    free(line->lines);
+    fclose(text->file);
+}
+
+size_t count_lines(struct Text* text)
 {
     size_t line_count = 0;
 
-    for (size_t i = 0; i < text_bytes; i++)
+    for (size_t i = 0; i < text->text_bytes; i++)
     {
-        if (text_a[i] == '\n')
+        if (text->text_a[i] == '\n')
         {
             line_count++;
         }
@@ -51,10 +58,10 @@ const long return_size_text(FILE *text)
     return text_bytes;
 }
 
-void print_results(size_t line_count, char** lines)
+void print_results(struct Lines* line)
 {
-    for (size_t i = 0; i < line_count; i++)
+    for (size_t i = 0; i < line->line_count; i++)
         {
-            printf("%s\n", lines[i]);
+            printf("%s\n", line->lines[i]);
         }
 }

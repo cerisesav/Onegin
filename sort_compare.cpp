@@ -10,90 +10,7 @@ static int isalnum_nospace(const char string)
     return isalnum(string) || string == ' ';
 }
 
-int compare_string(const char* first_char, const char* second_char)
-{
-    size_t i = 0, j = 0;
-
-    while (first_char[i] != '\0' && second_char[j] != '\0')
-    {
-        skip_chars_straight(i, j, first_char, second_char);
-
-        if (tolower(first_char[i]) != tolower(second_char[j]))
-        {
-            return ((int)tolower(first_char[i]) - (int)tolower(second_char[j]));
-        }
-
-        i++;
-        j++;
-    }
-    return 0;
-}
-
-void skip_chars_straight(size_t i, size_t j, const char* first_char, const char* second_char)
-{
-    while (first_char[i] != '\0' && !isalnum_nospace(first_char[i]))
-        {
-            i++;
-        }
-    while (second_char[j] != '\0' && !isalnum_nospace(second_char[j]))
-        {
-            j++;
-        }
-}
-
-void sort_strings(char** mass, int line_count) // передавать функцию сортер по указателю
-{
-    bool noSwap = true;
-
-    for (size_t i = line_count - 1; i > 0; i--)
-    {
-        noSwap = true;
-        for (size_t j = 0; j < i; j++)
-        {
-            if (compare_string(mass[j], mass[j + 1]) > 0)
-            {
-                swap(&mass[j], &mass[j+1], sizeof(char*));
-                noSwap = false;
-            }
-        }
-        if (noSwap)
-            break;
-    }
-}
-
-int back_compare_string(const char* first_char, const char* second_char)
-{
-    size_t i = sizeof(*first_char) / sizeof(first_char[0]), j = sizeof(*second_char) / sizeof(second_char[0]);
-
-    while (first_char[i] != '\0' && second_char[j] != '\0')
-    {
-
-        skip_chars_back(i, j, first_char, second_char);
-
-        if (tolower(first_char[i]) != tolower(second_char[j]))
-        {
-            return ((int)tolower(first_char[i]) - (int)tolower(second_char[j]));
-        }
-
-        i--;
-        j--;
-    }
-    return 0;
-}
-
-void skip_chars_back(size_t i, size_t j, const char* first_char, const char* second_char)
-{
-    while (first_char[i] != '\0' && !isalnum_nospace(first_char[i]))
-        {
-            i--;
-        }
-    while (second_char[j] != '\0' && !isalnum_nospace(second_char[j]))
-        {
-            j--;
-        }
-}
-
-void swap(void *a, void *b, size_t width)
+static void swap(void *a, void *b, size_t width)
 {
     void *temp = malloc(width);
 
@@ -104,50 +21,153 @@ void swap(void *a, void *b, size_t width)
     free(temp);
 }
 
-// function to find the partition position
-static int partition(char** array, int low, int high) {
+static void skip_chars_straight(size_t* i, size_t* j, const char* first_char, const char* second_char)
+{
+    while (first_char[*i] != '\0' && !isalnum_nospace(first_char[*i]))
+        {
+            (*i)++;
+        }
+    while (second_char[*j] != '\0' && !isalnum_nospace(second_char[*j]))
+        {
+            (*j)++;
+        }
+}
 
-  // select the rightmost element as pivot
+static void skip_chars_back(size_t* i, size_t* j, const char* first_char, const char* second_char)
+{
+    while (*i != -1 && !isalnum_nospace(first_char[*i])) {
+        (*i)--;
+    }
+    while (*j != -1 && !isalnum_nospace(second_char[*j])) {
+        (*j)--;
+    }
+}
+
+int straight_compare_string(const void* first_char, const void* second_char)
+{
+    const char* frst_char = (const char*)first_char;
+    const char* scnd_char = (const char*)second_char;
+
+    size_t i = 0, j = 0;
+
+    while (frst_char[i] != '\0' && scnd_char[j] != '\0')
+    {
+        skip_chars_straight(&i, &j, frst_char, scnd_char);
+
+        if (tolower(frst_char[i]) != tolower(scnd_char[j]))
+        {
+            return ((int)tolower(frst_char[i]) - (int)tolower(scnd_char[j]));
+        }
+
+        i++;
+        j++;
+    }
+    return 0;
+}
+
+void choose_sort_compare(compare compare, sort sort, char** array, int low, int high)
+{
+    sort(compare, array, low, high);
+}
+
+void sort_strings(char** mass, int line_count)
+{
+    line_count++;
+
+    bool noSwap = true;
+
+    for (size_t i = line_count - 1; i > 0; i--)
+    {
+        noSwap = true;
+        for (size_t j = 0; j < i; j++)
+        {
+            if (straight_compare_string(mass[j], mass[j + 1]) > 0)
+            {
+                swap(&mass[j], &mass[j+1], sizeof(char*));
+                noSwap = false;
+            }
+        }
+        if (noSwap)
+            break;
+    }
+}
+
+void bubble_sort(int(*compare)(const void*, const void*), char** mass, int low, int line_count)
+{
+    bool noSwap = true;
+
+    for (size_t i = line_count - 1; i > 0; i--)
+    {
+        noSwap = true;
+        for (size_t j = 0; j < i; j++)
+        {
+            if (compare(mass[j], mass[j + 1]) > 0)
+            {
+                swap(&mass[j], &mass[j+1], sizeof(char*));
+                noSwap = false;
+            }
+        }
+        if (noSwap)
+            break;
+    }
+}
+
+int back_compare_string(const void* first_char, const void* second_char)
+{
+    const char* frst_char = (const char*)first_char;
+    const char* scnd_char = (const char*)second_char;
+
+    size_t i = strlen(frst_char) - 1;
+    size_t j = strlen(scnd_char) - 1;
+
+    while (i != (size_t)-1 && j != (size_t)-1)
+    {
+        skip_chars_back(&i, &j, frst_char, scnd_char);
+
+        if (tolower(frst_char[i]) != tolower(scnd_char[j]))
+        {
+            return (int)(tolower(frst_char[i]) - tolower(scnd_char[j]));
+        }
+
+        i--;
+        j--;
+    }
+    return (int)(i - j);
+}
+
+static int partition(int(*compare)(const void*, const void*), char** array, int low, int high)
+{
   char* pivot = array[high];
 
-  // pointer for greater element
   int i = (low - 1);
 
-  // traverse each element of the array
-  // compare them with the pivot
   for (int j = low; j < high; j++) {
-    if (compare_string(array[j], pivot) <= 0) {
+    if (compare(array[j], pivot) <= 0) {
 
-      // if element smaller than pivot is found
-      // swap it with the greater element pointed by i
       i++;
-
-      // swap element at i with element at j
       swap(&array[i], &array[j], 2);
     }
   }
 
-  // swap the pivot element with the greater element at i
   swap(&array[i + 1], &array[high], 2);
 
-  // return the partition point
   return (i + 1);
 }
 
-void quick_sort(char** array, int low, int high)
+void quick_sort(int(*compare)(const void*, const void*), char** array, int low, int high)
 {
     if (low < high)
     {
         // find the pivot element such that
         // elements smaller than pivot are on left of pivot
         // elements greater than pivot are on right of pivot
-        int pi = partition(array, low, high);
+        int pi = partition(compare, array, low, high);
 
         // recursive call on the left of pivot
-        quick_sort(array, low, pi - 1);
+        quick_sort(compare, array, low, pi - 1);
 
         // recursive call on the right of pivot
-        quick_sort(array, pi + 1, high);
+        quick_sort(compare, array, pi + 1, high);
     }
 }
 
